@@ -5,7 +5,10 @@ on:
     branches: [ "main" ]
 
 jobs:
-
+  # ======================================================
+  # JOB 1: BUILD & PUSH
+  # Run on GitHub-hosted ubuntu-latest runner
+  # ======================================================
   build-and-push:
     runs-on: ubuntu-latest
     
@@ -13,15 +16,18 @@ jobs:
       - name: Checkout Code
         uses: actions/checkout@v4
 
+      # Log in to Docker Hub using your secrets
       - name: Log in to Docker Hub
         uses: docker/login-action@v3
         with:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
 
+      # Set up Docker Buildx (required for modern builds)
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
 
+      # Build the image using the Dockerfile and push to pavansw/apache-ubuntu-demo
       - name: Build and Push Docker image
         uses: docker/build-push-action@v5
         with:
@@ -29,11 +35,16 @@ jobs:
           push: true
           tags: mack2003/apache-ubuntu-demo:latest
 
+  # ======================================================
+  # JOB 2: DEPLOY (Simulated Deployment)
+  # Run on a NEW, FRESH GitHub-hosted ubuntu-latest runner
+  # ======================================================
   deploy-container:
-    needs: build-and-push 
+    needs: build-and-push  # This ensures Job 2 only starts if Job 1 succeeds
     runs-on: ubuntu-latest
 
     steps:
+      # Log in again (because this is a new runner)
       - name: Log in to Docker Hub
         uses: docker/login-action@v3
         with:
@@ -46,10 +57,13 @@ jobs:
           docker pull mack2003/apache-ubuntu-demo:latest
           
           echo "Step 2: Starting the container..."
+          # Run in detached mode (-d), map port 80 to 80
           docker run -d --name my-apache-server -p 80:80 pavansw/apache-ubuntu-demo:latest
 
           echo "Step 3: Verifying the container is running..."
           docker ps
+
+      # Since this runner is ephemeral (it dies after the job), we verify it works locally
       - name: Verify Application (Integration Test)
         run: |
           echo "Waiting 5 seconds for Apache to initialize..."
