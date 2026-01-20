@@ -27,7 +27,7 @@ jobs:
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
 
-      # Build the image using the Dockerfile and push to pavansw/apache-ubuntu-demo
+      # Build the image using the Dockerfile and push to mack2003/apache-ubuntu-demo
       - name: Build and Push Docker image
         uses: docker/build-push-action@v5
         with:
