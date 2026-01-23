@@ -27,13 +27,13 @@ jobs:
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
 
-      # Build the image using the Dockerfile and push to mack2003/apache-ubuntu-demo
+      # Build the Docker image and push it to the user's Docker Hub repository
       - name: Build and Push Docker image
         uses: docker/build-push-action@v5
         with:
           context: .
           push: true
-          tags: mack2003/apache-ubuntu-demo:latest
+          tags: ${{ secrets.DOCKER_USERNAME }}/apache-ubuntu-demo:latest
 
   # ======================================================
   # JOB 2: DEPLOY (Simulated Deployment)
@@ -54,11 +54,11 @@ jobs:
       - name: Pull and Run Container
         run: |
           echo "Step 1: Pulling the image we just built..."
-          docker pull mack2003/apache-ubuntu-demo:latest
+          docker pull ${{ secrets.DOCKER_USERNAME }}/apache-ubuntu-demo:latest
           
           echo "Step 2: Starting the container..."
           # Run in detached mode (-d), map port 80 to 80
-          docker run -d --name my-apache-server -p 80:80 mack2003/apache-ubuntu-demo:latest
+          docker run -d --name my-apache-server -p 80:80 ${{ secrets.DOCKER_USERNAME }}/apache-ubuntu-demo:latest
 
           echo "Step 3: Verifying the container is running..."
           docker ps
