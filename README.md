@@ -117,7 +117,7 @@ Repository → Settings → Secrets and variables → Actions
 ### 1. Clone the Repository
 
 ```bash
-git clone https://github.com/<your-username>/Automated-Docker-Build-Deployment-Pipeline-Using-GitHub-Actions-Ubuntu-Apache.git
+git clone https://github.com/Aditya07Patil07/Automated-Docker-Build-Deployment-Pipeline-Using-GitHub-Actions-Ubuntu-Apache
 cd Automated-Docker-Build-Deployment-Pipeline-Using-GitHub-Actions-Ubuntu-Apache
 ```
 
